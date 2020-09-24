@@ -1,62 +1,28 @@
+require('dotenv').config();
 const fetch = require('node-fetch');
-const fs = require('fs');
+// const fs = require('fs');
+const AWS = require('aws-sdk');
 
-// Building request body based on the documentation from SF here:
-// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_sobject_insert_update_blob.htm
-// Insert 'ContentVersion' to be precious
-const salesforceInstance = 'https://oodle--uat.my.salesforce.com';
-const url = `${salesforceInstance}/services/data/v43.0/sobjects/Document`
-const testImagePath = '/Users/bhuwan.garbuja/Downloads/rbf-cat.jpeg';
-const boundaryString = new Date().getTime();
+const getSFOauth = require('./getSFOauth');
 
-const accessToken = '';
+const uploadToSF = async (fileBinary, contentType, fileName) => {
 
-function serialize(obj) {
-  const paramValueList = Object.keys(obj).map((key) => `${key}=${encodeURIComponent(obj[key])}`);
-	return paramValueList.join('&');
-}
+  const oauthResponse = await getSFOauth();
+  const { accessToken, instanceUrl } = oauthResponse;
 
-function getSFToken() {
-  const sfOauthEndpoint = 'https://test.salesforce.com/services/oauth2/token';
-  fetch(sfOauthEndpoint, {
-    method: 'POST',
-    body: serialize({
-      client_id: '',
-      client_secret: '',
-      username: '',
-      password: '',
-      grant_type: 'password',
-    }),
-    headers: {
-      'Content-Type': 'x-www-form-urlencoded'
-    }
-  });
-}
+  // for documentation: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_sobject_insert_update_blob.htm
+  const url = `${instanceUrl}/services/data/v43.0/sobjects/ContentVersion`;
+  const boundaryString = `b0undry${new Date().getTime()}`;
 
-const obj = {
-  lol: 123,
-  'Sf-67': 'hfhf '
-}
-console.log('test: ', serialize(obj));
-
-fs.readFile(testImagePath, (error, fileBinary) => {
-
-  if (error) {
-    console.error('Failed to load the file: ', error);
-    return;
-  }
-
-  // TODO: write functions and abstract the logic once things are working
   let data = `--${boundaryString}\r\n`;
-  const destinationFileName = 'test.jpg';
-  data += `Content-Disposition: form-data; name="${destinationFileName}";\r\n`;
+  data += `Content-Disposition: form-data; name="${fileName}";\r\n`;
   data += 'Content-Type: application/json\r\n\r\n';
 
-  data += `${JSON.stringify({ Name: destinationFileName, FolderId: '00l4H000001AAbTQAW' })}\r\n\r\n`;
+  data += `${JSON.stringify({ PathOnClient: fileName })}\r\n\r\n`;
   data += `--${boundaryString}\r\n`;
 
-  data += `Content-Disposition: form-data; name="Body"; filename="${destinationFileName}";\r\n`;
-  data += 'Content-Type: image/jpeg\r\n\r\n';
+  data += `Content-Disposition: form-data; name="VersionData"; filename="${fileName}";\r\n`;
+  data += `Content-Type: ${contentType}\r\n\r\n`;
 
   const payload = Buffer.concat([
     Buffer.from(data, 'utf-8'),
@@ -73,7 +39,52 @@ fs.readFile(testImagePath, (error, fileBinary) => {
     }
   })
     .then(res => res.json())
-    .then(res => console.log(res))
-    .catch(error => console.error(error));
-})
+    .then(res => console.log(res));
+}
 
+const getS3Object = (bucketName, bucketKeyName) => {
+  const s3 = new AWS.S3();
+
+  const params = {
+    Bucket: bucketName,
+    Key: bucketKeyName,
+  };
+
+  return new Promise((resolve, reject) => {
+    s3.getObject(params, (error, data) => {
+      if (error) reject(error);
+      else resolve(data);
+    })
+  })
+}
+
+exports.handler = async (event) => {
+
+  const bucketName = 'sf-payout-proof';
+  const { bucketKeyName } = event;
+
+  if (!bucketKeyName) return {
+    statusCode: 400,
+    body: JSON.stringify({
+      message: 'bucketKeyName was not provided'
+    }),
+  };
+  
+  const fileName = bucketKeyName.substring(bucketKeyName.lastIndexOf('/') + 1);
+
+  try{
+    const s3Object = await getS3Object(bucketName, bucketKeyName);
+    await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: 'Upload to SF successfull' }),
+    }
+  } catch (error) {
+    return {
+      statusCode: error.statusCode,
+      body: JSON.stringify({
+        message: `Failed to read S3 object ${error}`
+      }),
+    };
+  }
+};
