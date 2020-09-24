@@ -5,8 +5,8 @@ const fs = require('fs');
 // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_sobject_insert_update_blob.htm
 // Insert 'ContentVersion' to be precious
 const salesforceInstance = 'https://oodle--uat.my.salesforce.com';
-const url = `${salesforceInstance}/services/data/v43.0/sobjects/ContentVersion`
-const testImagePath = '/Users/bhuwan.garbuja/Downloads/Oodle App.mp4';
+const url = `${salesforceInstance}/services/data/v43.0/sobjects/Document`
+const testImagePath = '/Users/bhuwan.garbuja/Downloads/rbf-cat.jpeg';
 const boundaryString = new Date().getTime();
 
 const accessToken = '';
@@ -48,15 +48,15 @@ fs.readFile(testImagePath, (error, fileBinary) => {
 
   // TODO: write functions and abstract the logic once things are working
   let data = `--${boundaryString}\r\n`;
-  const destinationFileName = 'Oodle App.mp4';
+  const destinationFileName = 'test.jpg';
   data += `Content-Disposition: form-data; name="${destinationFileName}";\r\n`;
   data += 'Content-Type: application/json\r\n\r\n';
 
-  data += `${JSON.stringify({ 'PathOnClient': destinationFileName })}\r\n\r\n`;
+  data += `${JSON.stringify({ Name: destinationFileName, FolderId: '00l4H000001AAbTQAW' })}\r\n\r\n`;
   data += `--${boundaryString}\r\n`;
 
-  data += `Content-Disposition: form-data; name="VersionData"; filename="${destinationFileName}";\r\n`;
-  data += 'Content-Type: video/mp4\r\n\r\n';
+  data += `Content-Disposition: form-data; name="Body"; filename="${destinationFileName}";\r\n`;
+  data += 'Content-Type: image/jpeg\r\n\r\n';
 
   const payload = Buffer.concat([
     Buffer.from(data, 'utf-8'),
