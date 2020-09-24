@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 
 let salesforceToken;
 let expiryDate;
+let instanceUrl;
 
 const SF_OAUTH_ENDPOINT = 'https://test.salesforce.com/services/oauth2/token';
 
@@ -10,11 +11,11 @@ const serialize = obj => {
   return paramValueList.join('&');
 }
 
-const getSFOauth = async () => {
+const getSFOAuth = async () => {
 
   // TODO: double check if this is okay
   if (salesforceToken && new Date() < expiryDate) {
-    return Promise.resolve(salesforceToken);
+    return { salesforceToken, instanceUrl };
   }
 
   const oauthBody = {
@@ -25,25 +26,26 @@ const getSFOauth = async () => {
     username: process.env.SF_USERNAME,
   };
 
-  fetch(SF_OAUTH_ENDPOINT, {
+  const result = await fetch(SF_OAUTH_ENDPOINT, {
     method: 'POST',
     body: serialize(oauthBody),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   })
-    .then(res => res.json())
-    .then(result => {
-      // eslint-disable-next-line camelcase
-      const { access_token, issued_at, instance_url } = result;
+    .then(res => res.json());
 
-      // eslint-disable-next-line camelcase
-      salesforceToken = access_token;
-      const issuedDate = new Date(issued_at);
-      expiryDate = issuedDate.setHours(issuedDate.getHours + 2);
+  // eslint-disable-next-line camelcase
+  const { access_token, issued_at, instance_url } = result;
+  // console.log(result);
 
-      return { accessToken: access_token, instanceUrl: instance_url };
-    });
+  // eslint-disable-next-line camelcase
+  salesforceToken = access_token;
+  instanceUrl = instance_url;
+  const issuedDate = new Date(issued_at);
+  expiryDate = issuedDate.setHours(issuedDate.getHours + 2);
+
+  return { accessToken: access_token, instanceUrl: instance_url };
 }
 
-exports.getSFOauth = getSFOauth;
+module.exports = getSFOAuth;

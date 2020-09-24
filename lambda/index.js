@@ -3,11 +3,11 @@ const fetch = require('node-fetch');
 // const fs = require('fs');
 const AWS = require('aws-sdk');
 
-const getSFOauth = require('./getSFOauth');
+const getSFOAuth = require('./getSFOAuth');
 
 const uploadToSF = async (fileBinary, contentType, fileName) => {
 
-  const oauthResponse = await getSFOauth();
+  const oauthResponse = await getSFOAuth();
   const { accessToken, instanceUrl } = oauthResponse;
 
   // for documentation: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_sobject_insert_update_blob.htm
@@ -30,7 +30,7 @@ const uploadToSF = async (fileBinary, contentType, fileName) => {
     Buffer.from(`\r\n\r\n--${boundaryString}--\r\n`, 'utf-8')
   ]);
 
-  fetch(url, {
+  const result = await fetch(url, {
     method: 'POST',
     body: payload,
     headers: {
@@ -38,8 +38,9 @@ const uploadToSF = async (fileBinary, contentType, fileName) => {
       'Content-Type': `multipart/form-data; boundary="${boundaryString}"`
     }
   })
-    .then(res => res.json())
-    .then(res => console.log(res));
+    .then(res => res.json());
+    
+  return result;
 }
 
 const getS3Object = (bucketName, bucketKeyName) => {
@@ -74,16 +75,16 @@ exports.handler = async (event) => {
 
   try{
     const s3Object = await getS3Object(bucketName, bucketKeyName);
-    await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
+    const uploadResult = await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Upload to SF successfull' }),
+      body: JSON.stringify({ message: 'Upload to SF successfull', result: uploadResult }),
     }
   } catch (error) {
     return {
       statusCode: error.statusCode,
       body: JSON.stringify({
-        message: `Failed to read S3 object ${error}`
+        message: `Failed to upload S3 object ${error}`
       }),
     };
   }
