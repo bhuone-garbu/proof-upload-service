@@ -12,7 +12,6 @@ const serialize = obj => {
 }
 
 const getSFOAuth = async () => {
-
   // TODO: double check if this is okay
   if (salesforceToken && new Date() < expiryDate) {
     return { salesforceToken, instanceUrl };
@@ -35,15 +34,12 @@ const getSFOAuth = async () => {
   })
     .then(res => res.json());
 
-  // eslint-disable-next-line camelcase
   const { access_token, issued_at, instance_url } = result;
-  // console.log(result);
 
-  // eslint-disable-next-line camelcase
   salesforceToken = access_token;
   instanceUrl = instance_url;
   const issuedDate = new Date(issued_at);
-  expiryDate = issuedDate.setHours(issuedDate.getHours + 2);
+  expiryDate = issuedDate.setMinutes(issuedDate.setMinutes + 90);
 
   return { accessToken: access_token, instanceUrl: instance_url };
 }
