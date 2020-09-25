@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const uploadToSF = require('./uploadToSF');
 
 const getS3Object = (bucketName, bucketKeyName) => {
   const s3 = new AWS.S3();
@@ -26,22 +27,13 @@ exports.handler = async (event) => {
       message: 'bucketKeyName was not provided'
     }),
   };
-  
+
   const fileName = bucketKeyName.substring(bucketKeyName.lastIndexOf('/') + 1);
 
-  try{
-    const s3Object = await getS3Object(bucketName, bucketKeyName);
-    const uploadResult = await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'Successfully uploaded to SF', salesforceResult: uploadResult }),
-    }
-  } catch (error) {
-    return {
-      statusCode: error.statusCode,
-      body: JSON.stringify({
-        message: `Failed to upload S3 object ${error}`
-      }),
-    };
+  const s3Object = await getS3Object(bucketName, bucketKeyName);
+  const uploadResult = await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: 'Successfully uploaded to SF', salesforceResult: uploadResult }),
   }
 };

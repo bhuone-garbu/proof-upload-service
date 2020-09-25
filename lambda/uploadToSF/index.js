@@ -34,7 +34,7 @@ const uploadToSF = async (fileBinary, contentType, fileName) => {
     }
   })
     .then(res => res.json());
-    
+
   return result;
 }
 
