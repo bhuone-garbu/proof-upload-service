@@ -17,15 +17,16 @@ const getS3Object = (bucketName, bucketKeyName) => {
   })
 }
 
-exports.handler = async (event) => {
+exports.handler = async(event) => {
   const bucketName = process.env.BUCKET_NAME;
+  console.log('event: ', event);
   const { bucketKeyName } = event;
 
   if (!bucketKeyName) return {
     statusCode: 400,
-    body: JSON.stringify({
-      message: 'bucketKeyName was not provided'
-    }),
+    body: {
+      message: '\'bucketKeyName\' was not provided'
+    }
   };
 
   const fileName = bucketKeyName.substring(bucketKeyName.lastIndexOf('/') + 1);
@@ -34,6 +35,9 @@ exports.handler = async (event) => {
   const uploadResult = await uploadToSF(s3Object.Body, s3Object.contentType, fileName);
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: 'Successfully uploaded to SF', salesforceResult: uploadResult }),
+    body: { 
+      message: 'Successfully uploaded to SF',
+      salesforceResult: uploadResult
+    }
   }
 };
