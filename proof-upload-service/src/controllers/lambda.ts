@@ -17,7 +17,7 @@ type LIRequest = Lambda.InvocationRequest;
 interface LIResponse {
   statusCode: number;
   body: {
-    [any: string]: string
+    [any: string]: string | number | boolean
   };
 }
 
