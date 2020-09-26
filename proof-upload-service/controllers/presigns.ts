@@ -1,14 +1,18 @@
 import AWS from 'aws-sdk';
 import { Request, Response } from 'express';
-import { accessKeyId, secretAccessKey, bucketName, bucketRegion } from '../config/aws';
+import {
+  accessKeyId, secretAccessKey, bucketName, bucketRegion,
+} from '../config/aws';
 
 if (!accessKeyId || !secretAccessKey || !bucketName) {
   throw new Error('environment variables not set properly');
 }
 
+console.log('throw');
+
 const credentials = {
   accessKeyId,
-  secretAccessKey
+  secretAccessKey,
 };
 
 AWS.config.update({ credentials, region: bucketRegion });
@@ -20,10 +24,10 @@ const createPresignForPUT = (req: Request, res: Response) => {
     Bucket: bucketName,
     Key: `staging/${loanAppId}/test.jpg`,
     Expires: 180,
-  })
+  });
   res.send({ presignedUrl });
-}
+};
 
 export {
-  createPresignForPUT
-}
+  createPresignForPUT,
+};

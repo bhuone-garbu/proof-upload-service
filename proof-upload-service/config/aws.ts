@@ -1,6 +1,15 @@
-export const bucketRegion = process.env.BUCKET_REGION;
-export const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const bucketName = process.env.BUCKET;
 
-export const accessKeyId = process.env.S3_ACCESS_KEY_ID;
-export const secretAccessKey = process.env.S3_SECRET_KEY;
-export const lambdaFuncName = process.env.LAMBA_FUNC_NAME;
+const accessKeyId = process.env.S3_ACCESS_KEY_ID;
+const secretAccessKey = process.env.S3_SECRET_KEY;
+
+const lambdaFuncName = process.env.LAMBA_FUNC_NAME;
+
+export {
+  bucketRegion,
+  bucketName,
+  accessKeyId,
+  secretAccessKey,
+  lambdaFuncName,
+};
