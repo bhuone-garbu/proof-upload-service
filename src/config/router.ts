@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import generatePUTSignedUrl from './s3';
-import uploadToSalesforce from './lambda';
+import generatePUTSignedUrl from '../controllers/s3';
+import uploadToSalesforce from '../controllers/lambda';
 
 const router = Router();
 
