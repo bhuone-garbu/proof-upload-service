@@ -19,7 +19,6 @@ const getS3Object = (bucketName, bucketKeyName) => {
 
 exports.handler = async(event) => {
   const bucketName = process.env.BUCKET_NAME;
-  console.log('event: ', event);
   const { bucketKeyName } = event;
 
   if (!bucketKeyName) return {
