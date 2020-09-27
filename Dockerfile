@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY package.json /app
 COPY package-lock.json /app
+COPY dist /app/dist
 
 RUN npm install --production
-COPY . /app
-CMD [ "npm", "run", "start" ]
+CMD npm start
