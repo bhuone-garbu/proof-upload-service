@@ -25,11 +25,11 @@ const credentials = {
   secretAccessKey,
 };
 
+const s3 = new S3({ credentials, region: s3BucketRegion });
+
 const getSignedUrl = ({
   operation, bucketKeyName, expiresIn,
 }: S3PresignRequest): Promise<string> => {
-  const s3 = new S3({ credentials, region: s3BucketRegion });
-
   const params = {
     Bucket: s3BucketName,
     Key: bucketKeyName,
@@ -49,6 +49,7 @@ const generatePUTSignedUrl = (req: Request, res: Response): void => {
     loanAppId, fileName, verificationCheckId,
   }: RequestBody = req.body;
 
+  // TODO: look into filtering the badly named filenames especially if it contains '/'s
   // TODO: look into the best way of handling errors
   if (!loanAppId) {
     res.status(400).send({ message: 'Invalid request body' });

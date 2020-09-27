@@ -6,11 +6,6 @@ if (!accessKeyId || !secretAccessKey || !lambdaRegion) {
   throw new Error('AWS credentials and bucket environment variables not set properly');
 }
 
-const credentials = {
-  accessKeyId,
-  secretAccessKey,
-};
-
 // only because it's a bit too long
 type LIRequest = Lambda.InvocationRequest;
 
@@ -25,8 +20,14 @@ interface LambdaPayload {
   bucketKeyName: string
 }
 
+const credentials = {
+  accessKeyId,
+  secretAccessKey,
+};
+
+const awsLambda = new Lambda({ credentials, region: lambdaRegion });
+
 const invokeLambda = (functionName: string, payload: LambdaPayload): Promise<LIResponse> => {
-  const awsLambda = new Lambda({ credentials, region: lambdaRegion });
   const params: LIRequest = {
     FunctionName: functionName,
     Payload: JSON.stringify(payload),

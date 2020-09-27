@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "dev": "nodemon -r dotenv/config src/index.ts",
-    "start": "ts-node -r dotenv/config src/index.ts"
+    "start": "npm run build && node -r dotenv/config dist/index.js"
   },
   "author": "",
   "license": "ISC",
