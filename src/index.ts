@@ -6,6 +6,12 @@ import router from './config/router';
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+app.use((_, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(bodyParser.json());
 
 // all the handlers are routed from the '/api'

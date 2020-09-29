@@ -65,7 +65,7 @@ const generatePUTSignedUrl = (req: Request, res: Response): void => {
   bucketKeyName += `/${fileName}`;
 
   // TODO: look into the best way of handling errors
-  getSignedUrl({ operation, bucketKeyName, expiresIn: 180 })
+  getSignedUrl({ operation, bucketKeyName, expiresIn: 120 })
     .then(signedUrl => res.status(201).json({
       bucketKeyName, loanAppId, verificationCheckId, signedUrl, fileName,
     }))
