@@ -6,13 +6,12 @@ if (!accessKeyId || !secretAccessKey || !lambdaRegion) {
   throw new Error('AWS credentials and bucket environment variables not set properly');
 }
 
-// only because it's a bit too long
 type LIRequest = Lambda.InvocationRequest;
 
 interface LIResponse {
   statusCode: number;
   body: {
-    [any: string]: string | number | boolean
+    [any: string]: unknown
   };
 }
 
