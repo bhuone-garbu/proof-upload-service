@@ -2,6 +2,8 @@
 
 This service deals with generating presigned S3 object to enable temporarily access to PUT/GET object from Amazon S3 for payout.
 
+Use `express` for routing requests.
+
 Using TypeScript only for fun. 😊
 
 ## Setup
