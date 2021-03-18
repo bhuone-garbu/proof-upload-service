@@ -135,6 +135,9 @@ Use POSTMAN to test this:
 PUT https://bucketnName/staging/0068E00000QQrT3/a0J8E00000D2qdZ/testing.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=blahbalahablah
 ```
 
+![image](https://user-images.githubusercontent.com/11137745/111639254-007e1e00-87f3-11eb-8eb5-20ce41d02a7f.png)
+
+
 This 👆 proves we can upload S3 platform agnostically - web/app or whatever.
 
 3. Finally triggering the lambda to upload to Salesforce.
