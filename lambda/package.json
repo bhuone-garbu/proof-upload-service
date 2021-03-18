@@ -4,7 +4,7 @@
   "description": "file uploader to SF",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "package": "zip -x .env -r deploy.zip ."
   },
   "author": "",
   "license": "ISC",

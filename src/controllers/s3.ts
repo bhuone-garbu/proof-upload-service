@@ -51,8 +51,8 @@ const generatePUTSignedUrl = (req: Request, res: Response): void => {
 
   // TODO: look into filtering the badly named filenames especially if it contains '/'s
   // TODO: look into the best way of handling errors
-  if (!loanAppId) {
-    res.status(400).send({ message: 'Invalid request body' });
+  if (!loanAppId || !fileName) {
+    res.status(400).send({ message: 'Invalid request body. Missing loanAppId or filename' });
     return;
   }
 
