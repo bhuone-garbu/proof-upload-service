@@ -4,10 +4,7 @@ import uploadToSalesforce from '../controllers/lambda';
 
 const router = Router();
 
-router.route('/signedurls')
-  .post(generatePUTSignedUrl);
-
-router.route('/upload')
-  .post(uploadToSalesforce);
+router.route('/signedurls').post(generatePUTSignedUrl);
+router.route('/upload').post(uploadToSalesforce);
 
 export default router;

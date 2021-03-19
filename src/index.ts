@@ -6,9 +6,13 @@ import router from './config/router';
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// or just use cors 😅
 app.use((_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
   next();
 });
 

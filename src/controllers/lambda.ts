@@ -3,7 +3,9 @@ import { Request, Response } from 'express';
 import { accessKeyId, secretAccessKey, lambdaRegion } from '../config/aws';
 
 if (!accessKeyId || !secretAccessKey || !lambdaRegion) {
-  throw new Error('AWS credentials and bucket environment variables not set properly');
+  throw new Error(
+    'AWS credentials and bucket environment variables not set properly',
+  );
 }
 
 type LIRequest = Lambda.InvocationRequest;
@@ -11,12 +13,12 @@ type LIRequest = Lambda.InvocationRequest;
 interface LIResponse {
   statusCode: number;
   body: {
-    [any: string]: unknown
+    [any: string]: unknown;
   };
 }
 
 interface LambdaPayload {
-  bucketKeyName: string
+  bucketKeyName: string;
 }
 
 const credentials = {
@@ -26,7 +28,10 @@ const credentials = {
 
 const awsLambda = new Lambda({ credentials, region: lambdaRegion });
 
-const invokeLambda = (functionName: string, payload: LambdaPayload): Promise<LIResponse> => {
+const invokeLambda = (
+  functionName: string,
+  payload: LambdaPayload,
+): Promise<LIResponse> => {
   const params: LIRequest = {
     FunctionName: functionName,
     Payload: JSON.stringify(payload),
