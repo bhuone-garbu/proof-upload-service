@@ -7,12 +7,6 @@ import {
   s3BucketRegion,
 } from '../config/aws';
 
-if (!accessKeyId || !secretAccessKey || !s3BucketName || !s3BucketRegion) {
-  throw new Error(
-    'AWS credentails and bucket environment variables not set properly',
-  );
-}
-
 interface S3PresignRequest {
   operation: 'putObject' | 'getObject';
   bucketKeyName: string;
@@ -56,10 +50,10 @@ const generatePUTSignedUrl = (req: Request, res: Response): void => {
 
   // TODO: look into filtering the badly named filenames especially if it contains '/'s
   // TODO: look into the best way of handling errors
-  if (!loanAppId || !fileName) {
+  if (!(loanAppId && fileName)) {
     res
       .status(400)
-      .send({ message: 'Invalid request body. Missing loanAppId or filename' });
+      .send({ message: 'Invalid request body. Missing loanAppId or fileName' });
     return;
   }
 

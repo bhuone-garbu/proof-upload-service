@@ -1,10 +1,33 @@
-import bodyParser from 'body-parser';
+import { json } from 'body-parser';
 import express from 'express';
 
 import router from './config/router';
+import {
+  s3BucketRegion,
+  s3BucketName,
+  accessKeyId,
+  secretAccessKey,
+  lambdaFuncName,
+  lambdaRegion,
+} from './config/aws';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+
+if (
+  !(
+    accessKeyId &&
+    secretAccessKey &&
+    s3BucketName &&
+    s3BucketRegion &&
+    lambdaFuncName &&
+    lambdaRegion
+  )
+) {
+  throw new Error(
+    'AWS credentials and bucket environment variables not set properly',
+  );
+}
 
 // or just use cors 😅
 app.use((_, res, next) => {
@@ -16,7 +39,7 @@ app.use((_, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+app.use(json());
 
 // all the handlers are routed from the '/api'
 app.use('/api', router);

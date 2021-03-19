@@ -2,12 +2,6 @@ import { Lambda } from 'aws-sdk';
 import { Request, Response } from 'express';
 import { accessKeyId, secretAccessKey, lambdaRegion } from '../config/aws';
 
-if (!accessKeyId || !secretAccessKey || !lambdaRegion) {
-  throw new Error(
-    'AWS credentials and bucket environment variables not set properly',
-  );
-}
-
 type LIRequest = Lambda.InvocationRequest;
 
 interface LIResponse {
