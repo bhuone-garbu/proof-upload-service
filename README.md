@@ -22,18 +22,18 @@ We need this settings so that we can allow clients to put object and retrieve th
 
 ```
 [
-    {
-        "AllowedHeaders": [],
-        "AllowedMethods": [
-            "POST",
-            "GET",
-            "PUT"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": []
-    }
+  {
+    "AllowedHeaders": [],
+    "AllowedMethods": [
+      "POST",
+      "GET",
+      "PUT"
+    ],
+    "AllowedOrigins": [
+      "*"
+    ],
+    "ExposeHeaders": []
+  }
 ]
 ```
 
@@ -41,9 +41,16 @@ You will need the bucket name later.
 
 1. Deploying the lambda function.
 
-`npm run package` on the lambda directory, create a function name at AWS lamda and upload the `deploy.zip`.
+Navigate to `/lambda` directory and run:
 
-The lambda function must a minimum permission of: `Allow: s3:GetObject`
+```
+npm install
+npm run package
+```
+
+A `deploy.zip` will be created and can be used to upload/update lamabda function. The main handler is named `uploadToSF` which will be invoked later by the express server.
+
+The lambda function must have a minimum permission of: `Allow: s3:GetObject`
 
 Fill the lambda config environmental variables with the following:
 ```
