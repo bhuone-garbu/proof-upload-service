@@ -8,7 +8,7 @@ TypeScript is only for fun. 😊
 
 **A demo with 100mb image size**
 
-upload-demo.gif![image](https://user-images.githubusercontent.com/11137745/112134863-11e57280-8bc5-11eb-8f3e-edc1d1dd69c0.png)
+upload-demo.gif![demo](https://raw.githubusercontent.com/bhuone-garbu/proof-upload-service/master/pics/upload-demo.gif)
 
 
 ## Setup
