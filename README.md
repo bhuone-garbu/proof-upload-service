@@ -8,7 +8,7 @@ TypeScript is only for fun. 😊
 
 **A demo with > 100mb image size**
 
-I just built this dummy frontend to piece all these together - not really required.
+I just built this dummy frontend to piece all these together - no part of this repo. Can be totally tested via Postman if you following the testing steps below.
 
 ![demo](https://raw.githubusercontent.com/bhuone-garbu/proof-upload-service/master/pics/upload-demo.gif)
 
