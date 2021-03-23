@@ -6,9 +6,11 @@ Presigned S3 object are used to to enable temporarily access to PUT/GET object f
 
 TypeScript is only for fun. 😊
 
-**A demo with 100mb image size**
+**A demo with > 100mb image size**
 
-upload-demo.gif![demo](https://raw.githubusercontent.com/bhuone-garbu/proof-upload-service/master/pics/upload-demo.gif)
+I just built this dummy frontend to piece all these together - not really required.
+
+![demo](https://raw.githubusercontent.com/bhuone-garbu/proof-upload-service/master/pics/upload-demo.gif)
 
 
 ## Setup
